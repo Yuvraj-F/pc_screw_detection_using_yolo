@@ -6,6 +6,7 @@ ChatGPT was used to fix syntax errors and generate boilerplate where needed. Any
 """
 
 import cv2
+from matplotlib import scale
 import numpy as np
 from ultralytics import YOLO
 import tkinter as tk
@@ -28,15 +29,19 @@ def select_file():
 def infer(image_path):
     if not image_path:
         print("No file selected. Exiting.")
-    
-    model = load_model()
-    result = model(image_path)
+    else:
+        model = load_model()
+        result = model(image_path)
 
-    # Use YOLO plot function to annotate the input image
-    annotated_image = result[0].plot()
+        # Use YOLO plot function to annotate the input image
+        annotated_image = result[0].plot()
 
-    cv2.imshow("result", annotated_image)
-    cv2.waitKey(0)
+        scale = 0.5
+        h, w = annotated_image.shape[:2]
+        resized = cv2.resize(annotated_image, (int(w * scale), int(h * scale)))
+
+        cv2.imshow("result", resized)
+        cv2.waitKey(0)
 
 if __name__ == "__main__":
     infer(select_file())
