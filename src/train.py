@@ -8,16 +8,19 @@ ChatGPT was used to fix syntax errors and generate boilerplate where needed. Any
 import shutil
 from pathlib import Path
 from ultralytics import YOLO
+from ultralytics.utils.torch_utils import get_gpu_info
 
 from config import *
 import model_loader as ml
 
 def copy_best_weights(model_name):
-    weights_path = BEST_WEIGHTS_DIR / model_name
-    weights_path.mkdir(parents=True, exist_ok=True)
-    shutil.copy2(RUNS_DIR / model_name / "weights" / "best.pt", dst=weights_path)
+    dst_path = BEST_WEIGHTS_DIR / model_name
+    BEST_WEIGHTS_DIR.mkdir(parents=True, exist_ok=True)
+    shutil.copy2(RUNS_DIR / model_name / "weights" / "best.pt", dst=dst_path)
 
 def train_model():
+    print(get_gpu_info(0))
+
     model = None
     while model is None:
         model_name = ml.get_model_name_from_user()
