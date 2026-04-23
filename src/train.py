@@ -27,7 +27,7 @@ def train_model():
         model_variant = ml.get_model_variant_from_user()
         model = ml.load_model(model_name, model_variant)
 
-    results = model.train(data=DATA_YAML, exist_ok=True, project=RUNS_DIR, name=model_name)
+    results = model.train(data=DATA_YAML, exist_ok=True, project=RUNS_DIR, name=model_name, imgsz=640)
     copy_best_weights(model_name)
 
 if __name__ == "__main__":
