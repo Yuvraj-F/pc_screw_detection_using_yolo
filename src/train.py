@@ -27,7 +27,27 @@ def train_model():
         model_variant = ml.get_model_variant_from_user()
         model = ml.load_model(model_name, model_variant)
 
-    results = model.train(data=DATA_YAML, exist_ok=True, project=RUNS_DIR, name=model_name, imgsz=640)
+    results = model.train(
+    data=DATA_YAML,
+    exist_ok=True, 
+    project=RUNS_DIR, 
+    name=model_name, 
+    imgsz=640,
+    epochs=100,
+    batch=16,
+    #classes=[0,1,2,3,4,5,6,7,8,9,10,11],
+    # cls_pw=0.2,
+    # hsv_h=0.5,
+    # hsv_s=0.5,
+    # hsv_v=0.4,
+    # degrees=180,
+    # translate=0.1,
+    # flipud=0,
+    # fliplr=0.5,
+    scale=0,
+    mosaic=0, #can cause occlusion which is not ideal
+    )
+    #results = model.train(data=DATA_YAML, exist_ok=True, project=RUNS_DIR, name=model_name, imgsz=640)
     copy_best_weights(model_name)
 
 if __name__ == "__main__":
