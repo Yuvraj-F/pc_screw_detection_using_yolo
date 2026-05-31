@@ -21,7 +21,7 @@ def get_model_name_from_user():
     """
     Gets model name. Only handles .pt model files.
     """
-    user_input = input("Enter YOLO model name: ")
+    user_input = input("Enter YOLO model name: ").strip()
     return user_input if user_input.endswith(".pt") else user_input + ".pt"
 
 def get_model_variant_from_user():
