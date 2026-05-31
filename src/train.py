@@ -9,6 +9,7 @@ import shutil
 from pathlib import Path
 from ultralytics import YOLO
 from ultralytics.utils.torch_utils import get_gpu_info
+from torch import cuda
 
 from config import *
 import model_loader as ml
@@ -29,7 +30,10 @@ def train_model():
     Trains a given model. It expects the dataset to be setup and does not perform any validation or checks to enforce correctness.
     """
     try:
-        print(get_gpu_info(0))
+        if cuda.is_available():
+            print(get_gpu_info(0))
+        else:
+            raise RuntimeError("CUDA not available")
     except AssertionError as e:
         print(f"GPU not found: {e}")
         print("Using CPU instead")
