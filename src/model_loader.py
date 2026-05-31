@@ -64,6 +64,7 @@ def load_model(model_name, variant=BEST):
     except Exception as e:
         print(e)
         print(f"[ERR] model not found: {model_name}")
+        print(f"Please refer to official docs for supported models: https://docs.ultralytics.com/models#featured-models")
     
 def load_model_from_user_input():
     model = None
