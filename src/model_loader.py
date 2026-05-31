@@ -62,8 +62,8 @@ def load_model(model_name, variant=BEST):
         print(f"[INFO] Loading {model_name}...")
         return YOLO(str(local_path)) 
     except Exception as e:
-        print(f"ERR: Failed to load model {model_name}")
         print(e)
+        print(f"[ERR] model not found: {model_name}")
     
 def load_model_from_user_input():
     model = None
