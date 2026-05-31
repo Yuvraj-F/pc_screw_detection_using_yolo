@@ -1,3 +1,7 @@
+"""
+A place to hold project related global values
+"""
+
 from pathlib import Path
 
 ROOT_DIR = Path(__file__).resolve().parent.parent

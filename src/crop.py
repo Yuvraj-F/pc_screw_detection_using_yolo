@@ -1,5 +1,6 @@
 """
-This was done entirely by chat gpt with manual verification to ensure it works as expected.
+This was done entirely by chat gpt with manual verification to ensure it works as expected. There can be issues where sometimes the augmented image
+does not preserve the bounding box. 
 """
 
 import cv2

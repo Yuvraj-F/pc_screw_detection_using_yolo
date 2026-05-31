@@ -14,11 +14,20 @@ from config import *
 import model_loader as ml
 
 def copy_best_weights(model_name):
+    """
+    Assumes model in the runs directory is the "best" (probably should be called last trained or latest run). 
+    Takes the model's weights from the runs directory and stores them in the best weights directory. 
+
+    These are the best weights that are used by model loader when asked to load the current best weights.
+    """
     dst_path = BEST_WEIGHTS_DIR / model_name
     BEST_WEIGHTS_DIR.mkdir(parents=True, exist_ok=True)
     shutil.copy2(RUNS_DIR / model_name / "weights" / "best.pt", dst=dst_path)
 
 def train_model():
+    """
+    Trains a given model. It expects the dataset to be setup and does not perform any validation or checks to enforce correctness.
+    """
     print(get_gpu_info(0))
 
     model = None
@@ -29,7 +38,6 @@ def train_model():
 
     results = model.train(
     data=DATA_YAML,
-    exist_ok=True, 
     project=RUNS_DIR, 
     name=model_name, 
     imgsz=640,
@@ -47,7 +55,6 @@ def train_model():
     scale=0,
     mosaic=0, #can cause occlusion which is not ideal
     )
-    #results = model.train(data=DATA_YAML, exist_ok=True, project=RUNS_DIR, name=model_name, imgsz=640)
     copy_best_weights(model_name)
 
 if __name__ == "__main__":

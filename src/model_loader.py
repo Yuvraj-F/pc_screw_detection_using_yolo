@@ -2,6 +2,10 @@
 Author: Yuvraj Fagotra
 Date: 16/04/2026
 
+A utility to load a yolo model and their best or base variants based on user input. The models are stored under models/base and models/best. 
+
+These methods are written to be reusable by any other code as needed. 
+
 ChatGPT was used to fix syntax errors and generate boilerplate where needed. Any generated code was used only as reference and edited, refactored, and structured manually unless stated otherwise. 
 """
 
@@ -14,10 +18,16 @@ BASE = "base"
 BEST = "best"
 
 def get_model_name_from_user():
+    """
+    Gets model name. Only handles .pt model files.
+    """
     user_input = input("Enter YOLO model name: ")
     return user_input if user_input.endswith(".pt") else user_input + ".pt"
 
 def get_model_variant_from_user():
+    """
+    Asks user to pick between base untrained model or current best trained model.  
+    """
     while True:
         user_input = input("Please pick an option (1) Base weights or (2) Current best weights: ").strip()
 
@@ -31,6 +41,9 @@ def get_model_variant_from_user():
             print("Invalid input. Please enter 1 or 2.")
     
 def load_model(model_name, variant=BEST):
+    """
+    Attempts to load a model from the models directory.
+    """
     MODELS_DIR.mkdir(exist_ok=True)
 
     local_path = None
