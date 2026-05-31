@@ -28,7 +28,11 @@ def train_model():
     """
     Trains a given model. It expects the dataset to be setup and does not perform any validation or checks to enforce correctness.
     """
-    print(get_gpu_info(0))
+    try:
+        print(get_gpu_info(0))
+    except AssertionError as e:
+        print(f"GPU not found: {e}")
+        print("Using CPU instead")
 
     model = None
     while model is None:
