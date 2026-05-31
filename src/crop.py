@@ -1,4 +1,6 @@
 """
+Running this script with no arguments opens 
+
 This was done entirely by chat gpt with manual verification to ensure it works as expected. There can be issues where sometimes the augmented image
 does not preserve the bounding box. 
 """
@@ -9,10 +11,13 @@ from config import *
 import tkinter as tk
 from tkinter import filedialog
 from ultralytics.data.utils import visualize_image_annotations
+from utils import hex_to_bgr 
 
 
 IMAGE_DIR = TRAIN_DATA_DIR / "images"
 LABEL_DIR = TRAIN_DATA_DIR / "labels"
+VAL_IMAGE_DIR = VAL_DATA_DIR / "images"
+VAL_LABEL_DIR = VAL_DATA_DIR / "labels"
 
 OUTPUT_IMAGE_DIR = TRAIN_DATA_DIR / "images_cropped"
 OUTPUT_LABEL_DIR = TRAIN_DATA_DIR / "labels_cropped"
@@ -90,60 +95,42 @@ def select_file():
 def view_selected_image(img_path):
     label_path = img_path.replace("images", "labels").replace(".jpg", ".txt").replace(".JPG", ".txt").replace(".png", ".txt")   
 
-
-    label_map = {  # Define the label map with all annotated class labels.
-        0: "2.5\" SSD",
-        1: "3.5\" HDD",
-        2: "GPU stand off bolt",
-        3: "MB stand off bolt",
-        4: "MB",
-        5: "PSU",
-        6: "bracket",
-        7: "fan",
-        8: "long fan above PSU",
-        9: "short fan above PSU",
-        10: "spare",
-        11: "stand off bolt tool"
-    }
-
     # From ultralytics
     visualize_image_annotations(
         img_path,  # Input image path.
         label_path,  # Annotation file path for the image.
-        label_map,
+        CLASS_NAMES,
     )
 
 def browse_dataset():
+    while True:
+        option = input("Which dataset would you like to browse? Training[1] | Validation[2]: ")
+        if option == "1":
+            img_dir = IMAGE_DIR
+            label_dir = LABEL_DIR
+            break
+        elif option == "2":
+            img_dir = VAL_IMAGE_DIR
+            label_dir = VAL_LABEL_DIR
+            break
+        else:
+            print("Inavlid option")
+
+    print("\n---Controls---\nNext: n | Previous: p | Quit: q")
 
     image_files = sorted([
-        f for f in os.listdir(IMAGE_DIR)
+        f for f in os.listdir(img_dir)
         if f.lower().endswith((".jpg", ".jpeg", ".png"))
     ])
 
     idx = 0
-
-    label_map = {
-        0: "2.5\" SSD",
-        1: "3.5\" HDD",
-        2: "GPU stand off bolt",
-        3: "MB stand off bolt",
-        4: "MB",
-        5: "PSU",
-        6: "bracket",
-        7: "fan",
-        8: "long fan above PSU",
-        9: "short fan above PSU",
-        10: "spare",
-        11: "stand off bolt tool"
-    }
-
     while True:
 
         img_file = image_files[idx]
         filename = os.path.splitext(img_file)[0]
 
-        img_path = IMAGE_DIR / img_file
-        label_path = LABEL_DIR / (filename + ".txt")
+        img_path = img_dir / img_file
+        label_path = label_dir / (filename + ".txt")
 
         img = cv2.imread(str(img_path))
         if img is None:
@@ -159,24 +146,25 @@ def browse_dataset():
             for cls, x, y, bw, bh in labels:
 
                 x1, y1, x2, y2 = yolo_to_pixel(x, y, bw, bh, w, h)
+                color = tuple(int(c*0.5) for c in hex_to_bgr(CLASS_COLORS.get(cls, None)))
 
                 cv2.rectangle(
                     img,
                     (int(x1), int(y1)),
                     (int(x2), int(y2)),
-                    (0, 255, 0),
-                    2
+                    color,
+                    5
                 )
 
-                text = label_map.get(cls, str(cls))
+                text = CLASS_NAMES.get(cls, str(cls))
                 cv2.putText(
                     img,
                     text,
                     (int(x1), int(y1) - 5),
                     cv2.FONT_HERSHEY_SIMPLEX,
-                    0.5,
-                    (0, 255, 0),
-                    1
+                    2,
+                    color,
+                    4
                 )
 
         display = cv2.resize(img, (900, 900))
@@ -419,7 +407,15 @@ if __name__ == "__main__":
     if len(sys.argv) > 1:
         mode = sys.argv[1]
     else:
-        mode = "view"
+        print("This is a utility for viewing annotated YOLO training images. It expects the images and annotations to be in images and labels directories.")
+        print("     Usage: python crop.py [Option]")
+        print("Options:")
+        print("browse   View annotated images. Useful for verifying results from crop or auto_crop.")
+        print("view     Opens the selected image with annotations loaded from labels directory.")
+        print("crop     Crop images while preserving annotations. Results are saved in a new directory.")
+        print("auto_crop    Crops the entire dataset automatically. Results are saved in a new directory.")
+        
+        sys.exit()
 
     if mode == "view":
         view_selected_image(select_file()[0])
