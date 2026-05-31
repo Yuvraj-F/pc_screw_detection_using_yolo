@@ -34,7 +34,7 @@ def train_model():
             print(get_gpu_info(0))
         else:
             raise RuntimeError("CUDA not available")
-    except AssertionError as e:
+    except Exception as e:
         print(f"GPU not found: {e}")
         print("Using CPU instead")
 
