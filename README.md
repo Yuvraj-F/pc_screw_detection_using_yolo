@@ -42,6 +42,13 @@ You can follow these steps to use any YOLO model available through the Ultralyti
 
   <img width="521" height="161" alt="image" src="https://github.com/user-attachments/assets/7d09abed-61cc-43b2-8ccb-2a29898c2eed" />
 
+## Dataset Crop Augmentation
+`crop.py` allows augmentation of the training dataset by following these instructions.
+
+- Run the following command to start ```python src/crop.py```.
+- The usage will be printed to the terminal and explains the various options.
+
+    <img width="852" height="115" alt="image" src="https://github.com/user-attachments/assets/067f8dd3-1463-41bc-a735-f6a87a355f2f" />
 
 ## Utilities
 ### Results
@@ -58,9 +65,11 @@ You can follow these steps to use any YOLO model available through the Ultralyti
 
   <img width="497" height="513" alt="image" src="https://github.com/user-attachments/assets/4bb99f93-df3c-4ff8-965c-6a184476b289" />
 
-The label directory can be modified in the src <img width="215" height="22" alt="image" src="https://github.com/user-attachments/assets/a8ef72e8-eb92-453b-8841-4dc271c8afce" /> if you would like to graph a different set of labels. It should be able to count class instances from any labels directory as long as the labels are in a [YOLO object detection annotation format](https://roboflow.com/formats/yolo). 
+The label directory can be modified in `counts.py` if you would like to graph a different set of labels. It should be able to count class instances from any labels directory as long as the labels are in a [YOLO object detection annotation format](https://roboflow.com/formats/yolo). 
 
-The graph uses the class names and colours defined in `config.py`.
+<img width="215" height="22" alt="image" src="https://github.com/user-attachments/assets/a8ef72e8-eb92-453b-8841-4dc271c8afce" />
+
+The graph uses the class names and colours defined in [config.py](#config).
 
 # Demo Dataset
 The demo dataset contains a datasets folder and a models folder. The datasets folder contains a sample from a custom PC screw training dataset. The models folder contains YOLOv8n weights pretrained on the custom dataset. Follow the steps below if you would like to use the demo dataset.
