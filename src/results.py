@@ -4,6 +4,7 @@ last epoch since the results graph do not contain those exact values.
 """
 
 import csv
+import os
 from config import *
 from model_loader import get_model_name_from_user
 
@@ -12,9 +13,17 @@ def get_user_input():
     Asks for model name and epoch to fetch from the user.
     It only returns data from models in the runs directory.
     """
-    model = get_model_name_from_user()
-    model_path = RUNS_DIR / model / "results.csv"
+    while True:
+        model = get_model_name_from_user()
+        model_path = RUNS_DIR / model / "results.csv"
+
+        if os.path.exists(model_path):
+            break
+        else:
+            print(f"No results data found: {model_path}")
+    
     epoch = int(input("Enter the epoch for which you would like to see the results: "))
+
     return model_path, epoch
 
 def print_epoch_metrics(file_path, target_epoch):
@@ -22,17 +31,20 @@ def print_epoch_metrics(file_path, target_epoch):
     Loads data from the model training run file path and prints the results at target_epoch 
     """
     print(f"Loading epoch {target_epoch} metrics from: {file_path}")
+
+    epochs_count = 0
     with open(file_path, newline='') as f:
         reader = csv.DictReader(f)
-        
         for row in reader:
+            epochs_count += 1
             if int(row["epoch"]) == target_epoch:
                 for k, v in row.items():
                     if k != "epoch":
                         print(f"{k}: {v}")
                 return
     
-    print("Epoch not found")
+    print(f"[ERR] Epoch {target_epoch} not found")
+    print(f"This training run had {epochs_count} epochs")
 
 if __name__ == "__main__":
     print_epoch_metrics(*get_user_input())
