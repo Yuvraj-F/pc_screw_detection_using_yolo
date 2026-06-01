@@ -1,13 +1,14 @@
 # PC Screw Detection Using YOLO
-Using transfer learning to train existing YOLO models for small object detection task, specifically detecting pc screws. 
+The purpose of this package is to use transfer learning to train existing YOLO models for small object detection task, specifically detecting pc screws. 
+This package provides scripts and utilities to use YOLO models for inference, train YOLO models, and apply simple crop augmentation to datasets.
 
-# How to run
-This package provides sripts and utilities to use YOLO models for inference, train YOLO models, and apply simple crop augmentation to your dataset.
+The scripts rely on the project structure to remain consistent. If the directory names or paths are changed, some scripts could break or behave unexpectedly. Refer to [Config](#config) for more information. 
 
 ## Inference
 You can follow these steps to use any YOLO model available through the Ultralytics module and do not need to install or download anything. You can also refer to [Demo Dataset](#demo-dataset) for access to a custom yolov8n model pretrained using a custom pc screw dataset.
 - Run the following command to start ```python src/test.py```.
-- You  will be asked for the name of the YOLO model you would like to use. For supported models refer to the [official documentation]( https://docs.ultralytics.com/models#featured-models).
+- You will see a file picker where you can select any image for inference.
+- Then you will be asked for the name of the YOLO model you would like to use. For supported models refer to the [official documentation]( https://docs.ultralytics.com/models#featured-models).
 - Next you get to pick between the base or best weights. Base refers to the base weights for the given model provide by Ultralytics (usually pre-trained on COCO). Best refers to the weights from the latest training run for that model. The "best" weights are only available if you have trained a model using the [training script](#training). If no best weights are found, it fallbacks to using base weights.
 
   <img width="695" height="117" alt="image" src="https://github.com/user-attachments/assets/2b8df7a0-8211-4c4e-98f5-f6ac69a9bc2d" />
@@ -16,20 +17,65 @@ You can follow these steps to use any YOLO model available through the Ultralyti
 ## Training
 Training requires a dataset. You can either provide your own or refer to [Demo Dataset](#demo-dataset) to use the demo dataset. 
 
+**NOTE: The training script will simply override any previous training results for a given model. It is up to the user to preserve the reselts of previous training runs. .**
+
 You can follow these steps to use any YOLO model available through the Ultralytics module and do not need to install or download anything.
-```
-python src/train.py
-```
+- Run the following command to start ```python src/train.py```.
+- You will be asked for the name of the YOLO model you would like to use. For supported models refer to the [official documentation]( https://docs.ultralytics.com/models#featured-models).
+- Next you get to pick between the base or best weights. Base refers to the base weights for the given model provide by Ultralytics (usually pre-trained on COCO). Best refers to the weights from the latest training run for that model and allows retraining a model from a previous run. [training script](#training).
+
+  <img width="696" height="100" alt="image" src="https://github.com/user-attachments/assets/dadfe5dd-f499-481e-b84a-eec7f02df235" />
+
+- Once the model is loaded, The training should start. Depedning on your internet speed and hardware specs, this could take a while.
+  
+  <img width="850" height="97" alt="image" src="https://github.com/user-attachments/assets/21662c6a-8984-4bf4-a407-35f4456f728a" />
+
+- Once the trianing is complete, you can use the trained model for [inference](#inference) by picking the best weights option.
+
+  <img width="490" height="62" alt="image" src="https://github.com/user-attachments/assets/f7c78baf-0977-4798-a3dd-75665fd646d2" />
+
+- The training hyperparameters are set in `train.py` and can be modified as needed.
+  
+  <img width="290" height="272" alt="image" src="https://github.com/user-attachments/assets/2646ef16-a5d1-4bee-9383-f4f105215674" />
+
+- The results are stored in the runs directory in a sub-folder named after the model being trained.
+
+  <img width="521" height="161" alt="image" src="https://github.com/user-attachments/assets/7d09abed-61cc-43b2-8ccb-2a29898c2eed" />
+
+
+## Utilities
+### Results
+`results.py` is a utility that fetches the training results (loss, recall, precision, etc.) for a given model at a given epoch. 
+- Run the following command to start ```python src/results.py```.
+- You will be asked for the name of the YOLO model you would like to use.
+- Next you will be asked for the target epoch. 
+
+  <img width="828" height="242" alt="image" src="https://github.com/user-attachments/assets/01665228-63d6-4185-a70c-aacb3147b8d3" />
+
+### Class Instance Distribution Graph
+`counts.py` reads the labels in datasets/val/labels and counts class instances to produce a graph similar to the one generated by the Ultralytics after a training run. This is mostly hardcoded and was only used to generate this graph for the validation set.
+- Run the script using `python src/counts.py` to generate a graph like the one below. 
+
+  <img width="497" height="513" alt="image" src="https://github.com/user-attachments/assets/4bb99f93-df3c-4ff8-965c-6a184476b289" />
+
+The label directory can be modified in the src <img width="215" height="22" alt="image" src="https://github.com/user-attachments/assets/a8ef72e8-eb92-453b-8841-4dc271c8afce" /> if you would like to graph a different set of labels. It should be able to count class instances from any labels directory as long as the labels are in a [YOLO object detection annotation format](https://roboflow.com/formats/yolo). 
+
+The graph uses the class names and colours defined in `config.py`.
 
 # Demo Dataset
-The dataset branch contains a trained model and a sample of the training dataset. 
-- If you do not have the `dataset.zip` file, you can download it from the dataset branch or switch to the dataset branch.
-  ```
-  git checkout dataset
-  ```
-- 
+The demo dataset contains a datasets folder and a models folder. The datasets folder contains a sample from a custom PC screw training dataset. The models folder contains YOLOv8n weights pretrained on the custom dataset. Follow the steps below if you would like to use the demo dataset.
+
+- If you do not have the `demo_data.zip` file, you can [download the zip file](https://github.com/Yuvraj-F/pc_screw_detection_using_yolo/blob/dataset/demo_data.zip) or switch to the dataset branch if you have cloned the repository. 
+- Extract `demo_data.zip` in the project folder.
+- You should have src, datasets, and models directories as shown below where datasets and models come from the zip file. 
+
+  <img width="548" height="153" alt="image" src="https://github.com/user-attachments/assets/b767d73e-0869-4729-a304-045a7fbc59ed" />
+
+- You are now setup to use the dataset and provided model for [inference](#inference) and/or [training](#training).
+
+# Config
+`config.py` defines variabels that are used across the project such as directories, paths, etc. These can be easily modified to match any changes that are made to the project without needing to update scripts individually. 
+
+<img width="298" height="149" alt="image" src="https://github.com/user-attachments/assets/3838e863-df2e-4205-aa8c-9dc6df292e65" />
 
 
-## Setup
-- This branch contains a `dataset.zip` file. Extract this file into the project root. Ensure that the project now has src, models, datasets directories.
-- 
