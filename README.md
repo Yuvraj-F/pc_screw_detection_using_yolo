@@ -1,11 +1,14 @@
 # PC Screw Detection Using YOLO
 The purpose of this package is to use transfer learning to train existing YOLO models for small object detection task, specifically detecting pc screws. 
-This package provides sripts and utilities to use YOLO models for inference, train YOLO models, and apply simple crop augmentation to datasets.
+This package provides scripts and utilities to use YOLO models for inference, train YOLO models, and apply simple crop augmentation to datasets.
+
+The scripts rely on the project structure to remain consistent. If the directory names or paths are changed, some scripts could break or behave unexpectedly. Refer to [Config](#config) for more information. 
 
 ## Inference
 You can follow these steps to use any YOLO model available through the Ultralytics module and do not need to install or download anything. You can also refer to [Demo Dataset](#demo-dataset) for access to a custom yolov8n model pretrained using a custom pc screw dataset.
 - Run the following command to start ```python src/test.py```.
-- You will be asked for the name of the YOLO model you would like to use. For supported models refer to the [official documentation]( https://docs.ultralytics.com/models#featured-models).
+- You will see a file picker where you can select any image for inference.
+- Then you will be asked for the name of the YOLO model you would like to use. For supported models refer to the [official documentation]( https://docs.ultralytics.com/models#featured-models).
 - Next you get to pick between the base or best weights. Base refers to the base weights for the given model provide by Ultralytics (usually pre-trained on COCO). Best refers to the weights from the latest training run for that model. The "best" weights are only available if you have trained a model using the [training script](#training). If no best weights are found, it fallbacks to using base weights.
 
   <img width="695" height="117" alt="image" src="https://github.com/user-attachments/assets/2b8df7a0-8211-4c4e-98f5-f6ac69a9bc2d" />
@@ -14,7 +17,7 @@ You can follow these steps to use any YOLO model available through the Ultralyti
 ## Training
 Training requires a dataset. You can either provide your own or refer to [Demo Dataset](#demo-dataset) to use the demo dataset. 
 
-**NOTE: The training script will override any previous training results for a given model. Refer to [results](#results) for details.**
+**NOTE: The training script will simply override any previous training results for a given model. It is up to the user to preserve the reselts of previous training runs. .**
 
 You can follow these steps to use any YOLO model available through the Ultralytics module and do not need to install or download anything.
 - Run the following command to start ```python src/train.py```.
@@ -35,11 +38,14 @@ You can follow these steps to use any YOLO model available through the Ultralyti
   
   <img width="290" height="272" alt="image" src="https://github.com/user-attachments/assets/2646ef16-a5d1-4bee-9383-f4f105215674" />
 
+- The results are stored in the runs directory in a sub-folder named after the model being trained.
+
+  <img width="521" height="161" alt="image" src="https://github.com/user-attachments/assets/7d09abed-61cc-43b2-8ccb-2a29898c2eed" />
+
+
 ## Utilities
 ### Results
-NOTE: The training is handeled by the Ultralytics module and results are stored in the runs directory in a sub-folder named after the model being trained. The training script **does not** handle multiple runs and simply overwrites previous results. It is up to the user to preserve the reselts of previous training runs. 
-
-`results.py` is a utility that fetches the training results (loss, recall, precision, etc.) for a given model at a given epoch.
+`results.py` is a utility that fetches the training results (loss, recall, precision, etc.) for a given model at a given epoch. 
 - Run the following command to start ```python src/results.py```.
 - You will be asked for the name of the YOLO model you would like to use.
 - Next you will be asked for the target epoch. 
@@ -65,5 +71,11 @@ The demo dataset contains a datasets folder and a models folder. The datasets fo
 
   <img width="548" height="153" alt="image" src="https://github.com/user-attachments/assets/b767d73e-0869-4729-a304-045a7fbc59ed" />
 
-- You are now setup to use the dataset and provided model.
+- You are now setup to use the dataset and provided model for [inference](#inference) and/or [training](#training).
+
+# Config
+`config.py` defines variabels that are used across the project such as directories, paths, etc. These can be easily modified to match any changes that are made to the project without needing to update scripts individually. 
+
+<img width="298" height="149" alt="image" src="https://github.com/user-attachments/assets/3838e863-df2e-4205-aa8c-9dc6df292e65" />
+
 
