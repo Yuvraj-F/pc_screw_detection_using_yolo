@@ -7,6 +7,7 @@ does not preserve the bounding box.
 
 import cv2
 import os
+import sys
 from config import *
 import tkinter as tk
 from tkinter import filedialog
@@ -402,13 +403,11 @@ def auto_crop_all():
     print("Done.")
 
 if __name__ == "__main__":
-    import sys
-
     if len(sys.argv) > 1:
         mode = sys.argv[1]
     else:
-        print("This is a utility for viewing annotated YOLO training images. It expects the images and annotations to be in images and labels directories.")
-        print("     Usage: python crop.py [Option]")
+        print(f"This is a utility for viewing annotated YOLO training images. It expects the images and annotations to be in the following directories:\n\nTraining Data: {IMAGE_DIR} and {LABEL_DIR}\nVaidation Data: {VAL_IMAGE_DIR} {VAL_LABEL_DIR}\n")
+        print("Usage: python crop.py [Option]\n")
         print("Options:")
         print("browse   View annotated images. Useful for verifying results from crop or auto_crop.")
         print("view     Opens the selected image with annotations loaded from labels directory.")
