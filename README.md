@@ -43,6 +43,8 @@ You can follow these steps to use any YOLO model available through the Ultralyti
   <img width="521" height="161" alt="image" src="https://github.com/user-attachments/assets/7d09abed-61cc-43b2-8ccb-2a29898c2eed" />
 
 ## Dataset Crop Augmentation
+NOTE: torchvision.transform provides such augmentations and it would be better to use that instead of this custom script.
+
 `crop.py` allows augmentation of the training dataset by following these instructions.
 
 - Run the following command to start ```python src/crop.py```.
